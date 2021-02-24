@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/browser-image-compression@1.0.13/dist/browser-image-compression.js"></script>
+    <style type="text/css">
+  #imgs: {
+    display: flex;
+    flex-direction: column;
+  }
+
+    </style>
+    <title>Document</title>
+</head>
+<body>
+    <input id="input" type="file" multiple/>
+    <div id="imgs">
+        <img id="raw" />
+        <img id="compressed" />
+    </div>
+</body>
+<script>
+    const inputElement = document.getElementById("input");
+    const onLoad = async (e) => {
+        if (e.target) {
+            const { result } = e.target;
+            console.log(result);
+        }
+    };
+
+    const options = {
+        maxSizeMB: 0.1,
+        maxWidthOrHeight: 1200,
+        useWebWorker: true,
+    }
+
+    // const handleFilesByReader = async (e) => {
+    //     const { files } = event.target;
+    //     const rawFile = files[0];
+    //     const compressedFile = await imageCompression(rawFile, options);
+    //     const urlObject = URL.createObjectURL(compressedFile);
+    //     const copmressedImg = document.getElementById("compressed");
+    //     copmressedImg.src = urlObject;
+    // }
+    const handleFilesByReader = async (e) => {
+        const { files } = event.target;
+        const rawFiles = Array.from(files);
+        const onProgressArray = [];
+        const compressPromise = rawFiles.map((rawFile, i) => {
+            const onProgress = (progress) => {
+                console.log(`${i}: ${progress}`)
+            }
+            onProgressArray.push(onProgress);
+            return imageCompression(rawFile, {...options, onProgress});
+        })
+        const compressedFiles = await Promise.all(compressPromise);
+        const urlObject = URL.createObjectURL(compressedFiles[0]);
+        const copmressedImg = document.getElementById("compressed");
+        copmressedImg.src = urlObject;
+    }
+
+
+    inputElement.addEventListener("change", handleFilesByReader, false);
+    function handleFiles() {
+        const fileList = this.files; /* ファイルリ  ストを処理するコードがここに入る */
+        const urls = Array.from(fileList).map(file => {
+            return URL.createObjectURL(file);
+        });
+        console.log(urls);
+    }
+
+
+</script>
+</html>
