@@ -6,10 +6,10 @@ import {
   isPhoto,
   Photo,
 } from 'models/photo';
-import { FirebaseContext } from 'contexts/firebase';
 import AuthContext from 'contexts/auth';
+import FirebaseContext from 'contexts/firebase';
 import shortid from 'shortid';
-import { compressImageFiles } from 'utils/imageFileUtils';
+import { compressImageFiles } from './compressImage';
 
 type HooksType = () => {
   state: {
@@ -29,8 +29,8 @@ const collectionOptions = {
 };
 
 export const useMyPhotos: HooksType = () => {
-  const { db, storage } = useContext(FirebaseContext);
   const { userId, userName } = useContext(AuthContext);
+  const { db, storage } = useContext(FirebaseContext);
   const photosCollection = useMemo(() => db.collection('photos'), [db]);
   const photosStorage = useMemo(() => storage.ref().child('photos/'), [
     storage,

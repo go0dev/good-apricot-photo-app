@@ -1,4 +1,4 @@
-import firebase from 'firebase';
+import { Timestamp, TimestampType } from 'lib/firebase';
 
 export type Photo = {
   id: string;
@@ -8,8 +8,8 @@ export type Photo = {
   comment?: string;
   userId: string;
   userName?: string;
-  createdAt?: firebase.firestore.Timestamp;
-  updatedAt?: firebase.firestore.Timestamp;
+  createdAt?: TimestampType;
+  updatedAt?: TimestampType;
 };
 
 const isPhoto = (arg: unknown): arg is Photo => {
@@ -33,8 +33,6 @@ export const newPhotoValue: Pick<Photo, 'isDeleted' | 'isPosted'> = {
   isPosted: false,
 };
 
-const timestamp = firebase.firestore.FieldValue.serverTimestamp() as firebase.firestore.Timestamp;
-
 export const createNewPhoto = (
   imageUrl: string,
   userId: string,
@@ -46,8 +44,8 @@ export const createNewPhoto = (
     isDeleted: false,
     userId,
     userName,
-    createdAt: timestamp,
-    updatedAt: timestamp,
+    createdAt: Timestamp,
+    updatedAt: Timestamp,
   };
 
   return newPhoto;
@@ -58,7 +56,7 @@ export const createDeletePhoto = (): Pick<
   'isDeleted' | 'updatedAt'
 > => ({
   isDeleted: true,
-  updatedAt: timestamp,
+  updatedAt: Timestamp,
 });
 
 export { isPhoto, isPhotos };

@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, useContext } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -6,17 +6,15 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
+import AuthContext from 'contexts/auth';
 
-type Props = {
-  handleLogin: (userName: string) => Promise<void>;
-};
-
-const Login: FC<Props> = ({ handleLogin }) => {
+const Login: FC = () => {
   const [userName, setUserName] = useState('');
-  console.log(handleLogin);
+  const { signUp } = useContext(AuthContext);
 
   const handleClick = async () => {
-    await handleLogin(userName);
+    console.log('signUp');
+    await signUp(userName);
   };
 
   return (

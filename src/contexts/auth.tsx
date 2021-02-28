@@ -3,12 +3,12 @@ import {
   createContext,
   useEffect,
   useState,
-  useContext,
   useCallback,
   useMemo,
+  useContext,
 } from 'react';
-import { firebase } from 'firebase';
-import { FirebaseContext } from './firebase';
+import firebase from 'firebase/app';
+import FirebaseContext from './firebase';
 
 type IAuthContext = {
   isAutenticated: boolean;
@@ -27,23 +27,27 @@ export const AuthProvider: FC = ({ children }) => {
   const isAutenticated = useMemo(() => !!user, [user]);
   const userId = useMemo(() => user?.uid || '', [user]);
   const userName = useMemo(() => user?.displayName || '', [user]);
+  console.log(user);
 
   useEffect(() => {
-    const unsubscribe = () => {
-      auth.onAuthStateChanged((authUser) => {
-        if (authUser) {
-          setUser(authUser);
-        }
-      });
-    };
+    const unsubscribe = auth.onAuthStateChanged((authUser) => {
+      console.log('state change', authUser);
+      if (authUser) {
+        setUser(authUser);
+      }
+    });
 
     return () => unsubscribe();
   }, [auth]);
 
-  const signUp = async (displayName: string) => {
-    const credential = await auth.signInAnonymously();
-    await credential.user?.updateProfile({ displayName });
-  };
+  const signUp = useCallback(
+    async (displayName: string) => {
+      const credential = await auth.signInAnonymously();
+      await credential.user?.updateProfile({ displayName });
+      console.log('complete sign up');
+    },
+    [auth],
+  );
 
   const updateUserName = useCallback(
     async (displayName: string) => {

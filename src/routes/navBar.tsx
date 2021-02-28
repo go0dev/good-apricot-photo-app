@@ -8,7 +8,7 @@ import MaterialAppBar from '@material-ui/core/AppBar';
 import { useNavigate } from 'react-router';
 import paths from 'routes/paths';
 
-export const NavBar: FC = () => {
+const NavBar: FC = () => {
   const trigger = useScrollTrigger();
   const navigate = useNavigate();
   const handleClick = useCallback(
@@ -36,3 +36,5 @@ export const NavBar: FC = () => {
     </Slide>
   );
 };
+
+export default NavBar;
