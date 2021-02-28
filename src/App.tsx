@@ -1,34 +1,25 @@
-import { FC } from 'react';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
-import PhotoApp from 'components/pages';
-import { ThemeProvider } from '@material-ui/core';
-import theme from 'theme';
-import HooksProvider from 'hooks/hooksProvider';
+import { FC, useContext, lazy, Suspense } from 'react';
+import { AppProvider } from 'contexts';
+import AuthContext from 'contexts/auth';
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 0,
-      suspense: true,
-    },
-    mutations: {
-      retry: 0,
-    },
-  },
-});
+const AuthenticatedApp = lazy(() => import('routes'));
+const UnauthenticatedApp = lazy(() => import('components/pages/login'));
 
-const App: FC = () => (
-  <ThemeProvider theme={theme}>
-    <HooksProvider>
-      <QueryClientProvider client={queryClient}>
-        <PhotoApp />
-        {process.env.NODE_ENV === 'development' && (
-          <ReactQueryDevtools initialIsOpen={false} />
+const App: FC = () => {
+  const { isAutenticated, signUp } = useContext(AuthContext);
+  console.log('signin', signUp);
+
+  return (
+    <AppProvider>
+      <Suspense fallback={<div>Loading</div>}>
+        {isAutenticated ? (
+          <AuthenticatedApp />
+        ) : (
+          <UnauthenticatedApp handleLogin={signUp} />
         )}
-      </QueryClientProvider>
-    </HooksProvider>
-  </ThemeProvider>
-);
+      </Suspense>
+    </AppProvider>
+  );
+};
 
 export default App;

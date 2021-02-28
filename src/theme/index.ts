@@ -1,24 +1,16 @@
 import { unstable_createMuiStrictModeTheme as createMuiTheme } from '@material-ui/core/styles';
-
-const white = '#FFFFFF';
+import { palette } from './palette';
+import { breakpoints } from './breakpoints';
+import { spacing } from './spacing';
+import { overrides } from './overrides';
+import { mixins } from './mixins';
 
 const theme = createMuiTheme({
-  breakpoints: {
-    values: {
-      tablet: 640,
-      laptop: 1024,
-      desktop: 1280,
-    },
-  },
-  palette: {
-    primary: {
-      contrastText: white,
-      main: '#37B2F7',
-    },
-    background: {
-      default: '#eaeae8',
-    },
-  },
+  palette,
+  breakpoints,
+  spacing,
+  overrides,
+  mixins,
 });
 
 export default theme;

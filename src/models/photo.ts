@@ -7,7 +7,7 @@ export type Photo = {
   isDeleted: boolean;
   comment?: string;
   userId: string;
-  userName: string;
+  userName?: string;
   createdAt?: firebase.firestore.Timestamp;
   updatedAt?: firebase.firestore.Timestamp;
 };
@@ -25,12 +25,40 @@ const isPhoto = (arg: unknown): arg is Photo => {
   );
 };
 
-const isPhotos = (args: unknown[]): args is Photo[] =>
-  !args.some((arg) => !isPhoto(arg));
+const isPhotos = (args?: unknown[]): args is Photo[] =>
+  !!args && !args.some((arg) => !isPhoto(arg));
 
 export const newPhotoValue: Pick<Photo, 'isDeleted' | 'isPosted'> = {
   isDeleted: false,
   isPosted: false,
 };
+
+const timestamp = firebase.firestore.FieldValue.serverTimestamp() as firebase.firestore.Timestamp;
+
+export const createNewPhoto = (
+  imageUrl: string,
+  userId: string,
+  userName: string,
+): Omit<Photo, 'id'> => {
+  const newPhoto: Omit<Photo, 'id'> = {
+    imageUrl,
+    isPosted: false,
+    isDeleted: false,
+    userId,
+    userName,
+    createdAt: timestamp,
+    updatedAt: timestamp,
+  };
+
+  return newPhoto;
+};
+
+export const createDeletePhoto = (): Pick<
+  Photo,
+  'isDeleted' | 'updatedAt'
+> => ({
+  isDeleted: true,
+  updatedAt: timestamp,
+});
 
 export { isPhoto, isPhotos };

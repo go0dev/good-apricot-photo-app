@@ -2,6 +2,7 @@ module.exports = {
   env: {
     browser: true,
     es2021: true,
+    'jest/globals': true,
   },
   extends: [
     'plugin:react/recommended',
@@ -33,6 +34,7 @@ module.exports = {
     'prefer-arrow',
     'react',
     'react-hooks',
+    'jest',
   ],
   root: true,
   rules: {
@@ -119,6 +121,9 @@ module.exports = {
         paths: ['src'],
       },
     },
+    jest: {
+      jestConfigFile: './jest.config.js',
+    },
   },
   ignorePatterns: [
     'build/',
@@ -128,5 +133,6 @@ module.exports = {
     '**/*.min.js',
     '*.config.js',
     '.*lintrc.js',
+    '__test__',
   ],
 };

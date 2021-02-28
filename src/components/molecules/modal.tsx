@@ -1,13 +1,12 @@
 import { FC } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
-// import Backdrop from '@material-ui/core/Backdrop';
+import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
-// import Box from '@material-ui/core/Box';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    modal: {
+    dialog: {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -23,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 type Props = {
   open: boolean;
-  handleClose: () => void;
+  handleClose?: () => void;
 };
 
 const TransitionsModal: FC<Props> = ({ open, handleClose, children }) => {
@@ -34,17 +33,17 @@ const TransitionsModal: FC<Props> = ({ open, handleClose, children }) => {
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
-        className={classes.modal}
+        className={classes.dialog}
         open={open}
         onClose={handleClose}
         closeAfterTransition
-        // BackdropComponent={Backdrop}
-        // BackdropProps={{
-        //   timeout: 500,
-        // }}
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
       >
         <Fade in={open}>
-          <div>{children}</div>
+          <div className={classes.paper}>{children}</div>
         </Fade>
       </Modal>
     </>
